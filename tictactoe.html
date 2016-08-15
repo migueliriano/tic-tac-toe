@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>	Tic Tac Toe</title>
+
+  <style type="text/css">
+
+    .tictactoe-container{
+        overflow: hidden;
+        display: inline-block;
+        width: 247px
+    }
+
+    .tictactoe-container .box{
+      width: 80px;
+      height: 80px;
+      border-right: 1px solid #000;
+      border-top: 1px solid #000 ;
+      border-bottom: 0;
+      float: left;
+      cursor: pointer;
+    }
+
+    .tictactoe-container .box:nth-child(3n+3){
+      border-right: none;
+    }
+    .tictactoe-container .row-1{
+      border-top: none;      
+    }
+
+  </style>
+
+</head>
+
+<body>
+		<div id="game-container"> </div>
+    <div class="tictactoe-container">
+      <div class="box" class="row-1"></div>
+      <div class="box" class="row-1"></div>
+      <div class="box" class="row-1"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+    </div>
+</body>
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function (){
+  
+  Tictactoe = function (containerId){
+  	this.gameData = this.generateArrayData();
+  	this.currentPlayer = 1;
+  	this.renderHtml(containerId);
+  };
+  
+  Tictactoe.prototype.renderHtml = function (containerId){
+  	// $('#'+ containerId).html(this.gameData);
+  };
+  
+  Tictactoe.prototype.generateArrayData = function (){
+  	var boxNumber = 3 // 3x3
+  	var gameData = new Array(boxNumber);
+  	for(i=0; i<boxNumber; i++){
+  		gameData[i] = new Array(boxNumber);
+	}
+	return gameData;
+  };
+
+  $initialTictactoe = new Tictactoe('game-container');
+});
+
+</script>
+</html>
