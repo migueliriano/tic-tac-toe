@@ -1,31 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>	Tic Tac Toe</title>
+  <title> Tic Tac Toe</title>
 
   <style type="text/css">
 
     .tictactoe-container{
         overflow: hidden;
         display: inline-block;
-        width: 247px
+        width: 255px
     }
 
     .tictactoe-container .box{
-      width: 80px;
-      height: 80px;
-      border-right: 1px solid #000;
-      border-top: 1px solid #000 ;
-      border-bottom: 0;
-      float: left;
-      cursor: pointer;
+        width: 80px;
+        height: 80px;
+        border-right: 1px solid #000;
+        border-top: 1px solid #000 ;
+        border-bottom: 0;
+        float: left;
+        cursor: pointer;
+        font-size: 55px;
+        text-align: center;
+    }
+
+    .tictactoe-container .box:hover{
+        background-color: #efefef;
     }
 
     .tictactoe-container .box:nth-child(3n+3){
-      border-right: none;
+        border-right: none;
     }
-    .tictactoe-container .row-1{
-      border-top: none;      
+    .tictactoe-container .box-row-1{
+        border-top: none;      
     }
 
   </style>
@@ -33,18 +39,8 @@
 </head>
 
 <body>
-		<div id="game-container"> </div>
-    <div class="tictactoe-container">
-      <div class="box" class="row-1"></div>
-      <div class="box" class="row-1"></div>
-      <div class="box" class="row-1"></div>
-      <div class="box"></div>
-      <div class="box"></div>
-      <div class="box"></div>
-      <div class="box"></div>
-      <div class="box"></div>
-      <div class="box"></div>
-    </div>
+    <div id="game-container"></div>
+
 </body>
 
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
@@ -53,26 +49,103 @@
 
 $(document).ready(function (){
   
-  Tictactoe = function (containerId){
-  	this.gameData = this.generateArrayData();
-  	this.currentPlayer = 1;
-  	this.renderHtml(containerId);
+  var Tictactoe = function (containerEle){
+
+    this.config = {
+      currentPlayer: 1,
+      boxNumber: 3
+    }
+
+    this.players = {
+
+      'player-1' : {
+        'symbol' : 'X',
+        'name' : 'Miguel Angel'
+      },
+
+      'player-2' : {
+        'symbol' : 'O',
+        'name' : 'El Perdedor'
+      }
+
+    };
+
+    this.gameData = this.generateArrayData();
+    this.renderHtml(containerEle);
+
   };
   
-  Tictactoe.prototype.renderHtml = function (containerId){
-  	// $('#'+ containerId).html(this.gameData);
-  };
-  
-  Tictactoe.prototype.generateArrayData = function (){
-  	var boxNumber = 3 // 3x3
-  	var gameData = new Array(boxNumber);
-  	for(i=0; i<boxNumber; i++){
-  		gameData[i] = new Array(boxNumber);
-	}
-	return gameData;
+  Tictactoe.prototype.renderHtml = function (containerEle){
+
+    var $gameHtml = $('<div>').addClass('tictactoe-container');
+    var $self = this;
+
+    for (i = 0; i < this.config.boxNumber; i++ ){
+
+        for(n = 0; n < this.config.boxNumber; n++){
+
+          var currentRow = i + 1;
+
+          var boxElementAttr = {
+              'class' : 'box box-row-' + currentRow,
+              'data-row' : i,
+              'data-box-number' : n,
+              'data-id-player': 0,
+          };
+
+          var $boxElement = $('<div>').attr(boxElementAttr);
+
+          $boxElement.click(function (){
+              if( $(this).attr('data-id-player') == 0 ){
+                $self.setBoxSimbol(this, $self);
+                $self.updateData(this, $self);
+                $self.nextPlayer($self);
+              }
+
+          });
+
+          $gameHtml.append($boxElement);
+
+        }
+
+    }
+
+    $(containerEle).html($gameHtml);
+
   };
 
-  $initialTictactoe = new Tictactoe('game-container');
+  Tictactoe.prototype.updateData = function (currentEle, $self){
+      var currentPlayerObj =  $self.getCurrentPlayerObj($self);
+  }
+
+  Tictactoe.prototype.setBoxSimbol = function (currentEle, $self){
+
+      var currentPlayerObj = $self.getCurrentPlayerObj($self);
+      console.log(currentPlayerObj);
+      
+      $(currentEle).html(currentPlayerObj.symbol);
+  }
+
+  Tictactoe.prototype.nextPlayer = function ($self){
+    $self.config.currentPlayer = $self.config.currentPlayer == 1 ? 2 : 1;
+  }
+
+  Tictactoe.prototype.getCurrentPlayerObj = function ($self){
+      return $self.players['player-' + $self.config.currentPlayer];
+  }
+
+  Tictactoe.prototype.generateArrayData = function (){
+    var gameData = new Array(this.config.boxNumber);
+
+    for(i = 0; i < this.config.boxNumber; i++){
+      gameData[i] = new Array(this.config.boxNumber);
+    }
+
+    return gameData;
+  };
+
+  initialTictactoe = new Tictactoe('#game-container');
+
 });
 
 </script>
